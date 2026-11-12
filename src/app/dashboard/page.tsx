@@ -153,10 +153,10 @@ export default function Dashboard() {
                 Dashboard
               </span>
               <Link
-                href="/playground"
-                className="text-zinc-400 hover:text-zinc-200 transition px-2 py-1"
+                href="/chat"
+                className="text-zinc-400 hover:text-zinc-200 transition px-2 py-1 flex items-center gap-1"
               >
-                Playground
+                <span>Chat AI</span>
               </Link>
             </nav>
           </div>
@@ -273,10 +273,10 @@ export default function Dashboard() {
             </div>
             <div className="mt-4 pt-3 border-t border-zinc-800/60">
               <Link
-                href="/playground"
+                href="/chat"
                 className="text-xs font-medium text-zinc-300 hover:text-white transition flex items-center gap-1"
               >
-                <span>Vào Playground chat thử</span>
+                <span>Mở Chat AI (Giao diện ChatGPT)</span>
                 <ExternalLink className="w-3 h-3 text-zinc-400" />
               </Link>
             </div>

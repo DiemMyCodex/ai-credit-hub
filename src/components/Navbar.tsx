@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { AuthModal } from "@/components/AuthModal";
-import { Cpu, LayoutDashboard, LogIn } from "lucide-react";
+import { Cpu, LayoutDashboard, LogIn, MessageSquare } from "lucide-react";
 
 export function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
@@ -50,6 +50,10 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-5 text-xs text-zinc-400">
+            <Link href="/chat" className="text-zinc-200 hover:text-white transition flex items-center gap-1 font-medium">
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>Chat AI</span>
+            </Link>
             <a href="#models" className="hover:text-zinc-200 transition">Model hỗ trợ</a>
             <a href="#pricing" className="hover:text-zinc-200 transition">Bảng giá Token</a>
             <a href="#features" className="hover:text-zinc-200 transition">Tính năng</a>
@@ -57,6 +61,14 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2.5">
+            <Link
+              href="/chat"
+              className="md:hidden flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-200"
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>Chat</span>
+            </Link>
+
             {user ? (
               <Link
                 href="/dashboard"
