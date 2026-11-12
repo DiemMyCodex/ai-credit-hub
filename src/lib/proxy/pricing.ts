@@ -53,3 +53,5 @@ export function calculateCostVnd(
   const costVnd = Math.ceil(totalUsd * USD_TO_VND_RATE);
   return Math.max(1, costVnd);
 }
+
+export const calculateTokenCostVND = calculateCostVnd;

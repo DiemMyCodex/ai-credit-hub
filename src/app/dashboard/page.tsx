@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { formatVND, formatNumber } from "@/lib/utils";
-import { TopupModal } from "@/components/TopupModal";
+import { TopupModal } from "@/components/TopUpModal";
 import { KeyModal } from "@/components/KeyModal";
 import {
   Cpu,
