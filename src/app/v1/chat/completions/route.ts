@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateClientAuth } from "@/lib/proxy/auth";
-import { calculateCostVnd } from "@/lib/proxy/pricing";
+import { calculateCostVnd, resolveUpstreamModel } from "@/lib/proxy/pricing";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const model = body.model || "anthropic/claude-3.5-sonnet";
+    const model = resolveUpstreamModel(body.model || "anthropic/claude-sonnet-4.5");
     const isStream = Boolean(body.stream);
 
     const openRouterApiKey = process.env.OPENROUTER_API_KEY;

@@ -40,13 +40,13 @@ interface ChatThread {
 
 const AVAILABLE_MODELS = [
   {
-    id: "anthropic/claude-3.5-sonnet",
+    id: "anthropic/claude-sonnet-4.5",
     name: "Claude 3.5 Sonnet",
     provider: "Anthropic",
     desc: "Coding và tư duy logic đỉnh nhất",
   },
   {
-    id: "openai/gpt-4o",
+    id: "openai/gpt-4o-2024-11-20",
     name: "GPT-4o Omnimodel",
     provider: "OpenAI",
     desc: "Đa năng, cân bằng và thông minh",
@@ -58,8 +58,8 @@ const AVAILABLE_MODELS = [
     desc: "Thông minh như Claude, giá siêu rẻ",
   },
   {
-    id: "google/gemini-2.0-flash",
-    name: "Gemini 2.0 Flash",
+    id: "google/gemini-3.5-flash-lite",
+    name: "Gemini Flash Lite",
     provider: "Google",
     desc: "Tốc độ cực nhanh, phản hồi tức thì",
   },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { calculateCostVnd } from "@/lib/proxy/pricing";
+import { calculateCostVnd, resolveUpstreamModel } from "@/lib/proxy/pricing";
 
 export const runtime = "nodejs";
 
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const model = body.model || "anthropic/claude-3.5-sonnet";
+    const model = resolveUpstreamModel(body.model || "anthropic/claude-sonnet-4.5");
     const messages = body.messages || [];
 
     if (!Array.isArray(messages) || messages.length === 0) {
