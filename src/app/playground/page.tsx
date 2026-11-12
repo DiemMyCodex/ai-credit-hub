@@ -6,16 +6,12 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatVND } from "@/lib/utils";
 import {
-  Cpu,
   ArrowLeft,
   Send,
   Loader2,
-  Sparkles,
   Bot,
   User as UserIcon,
   Zap,
-  Activity,
-  Layers,
   Trash2,
   Copy,
   Check,
@@ -27,10 +23,10 @@ interface Message {
 }
 
 const AVAILABLE_MODELS = [
-  { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet", provider: "Anthropic", tag: "Coding Trùm" },
-  { id: "openai/gpt-4o", name: "GPT-4o Omnimodel", provider: "OpenAI", tag: "Đa Năng" },
-  { id: "deepseek/deepseek-chat", name: "DeepSeek-V3", provider: "DeepSeek", tag: "Siêu Rẻ" },
-  { id: "google/gemini-2.0-flash", name: "Gemini 2.0 Flash", provider: "Google", tag: "Cực Nhanh" },
+  { id: "anthropic/claude-3.5-sonnet", name: "Claude 3.5 Sonnet", provider: "Anthropic" },
+  { id: "openai/gpt-4o", name: "GPT-4o Omnimodel", provider: "OpenAI" },
+  { id: "deepseek/deepseek-chat", name: "DeepSeek-V3", provider: "DeepSeek" },
+  { id: "google/gemini-2.0-flash", name: "Gemini 2.0 Flash", provider: "Google" },
 ];
 
 export default function Playground() {
@@ -41,7 +37,8 @@ export default function Playground() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Xin chào! Tôi là AI được kết nối trực tiếp qua cổng AI Credit Hub. Bạn có thể thử nghiệm tốc độ streaming và độ thông minh của model ngay tại đây.",
+      content:
+        "Xin chào! Tôi là AI được kết nối trực tiếp qua cổng AI Credit Hub. Bạn có thể thử nghiệm tốc độ streaming và chất lượng model ngay tại đây.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -62,7 +59,9 @@ export default function Playground() {
   }, [messages]);
 
   async function loadUserAndKeys() {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       router.push("/");
       return;
@@ -105,7 +104,6 @@ export default function Playground() {
     setMessages([...newMessages, { role: "assistant", content: "" }]);
 
     try {
-      // Find current selected key prefix or ask user to create key
       const keyObj = keys.find((k) => k.id === selectedKey);
       if (!keyObj && keys.length === 0) {
         alert("Bạn chưa tạo API Key nào. Vui lòng vào Dashboard tạo ít nhất 1 key trước!");
@@ -113,13 +111,10 @@ export default function Playground() {
         return;
       }
 
-      // In browser playground, we call internal API route with current user session
-      // For testing, proxy route handler accepts Bearer token or cookie auth
       const res = await fetch("/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Send key header if client stored raw key, or let playground test via standard route
           Authorization: `Bearer sk-aihub-internal-playground-test`,
         },
         body: JSON.stringify({
@@ -158,7 +153,7 @@ export default function Playground() {
                 setMessages([...newMessages, { role: "assistant", content: assistantMessage }]);
               }
             } catch {
-              // ignore partial
+              // ignore partial json
             }
           }
         }
@@ -183,7 +178,7 @@ export default function Playground() {
         ...newMessages,
         {
           role: "assistant",
-          content: `Lỗi kết nối API: ${err.message}. (Gợi ý: Hãy kiểm tra xem bạn đã cấu hình OPENROUTER_API_KEY trong file .env chưa hoặc ví còn đủ 1,000đ không).`,
+          content: `Lỗi kết nối API: ${err.message}.`,
         },
       ]);
     } finally {
@@ -198,27 +193,27 @@ export default function Playground() {
   }
 
   return (
-    <div className="min-h-screen bg-obsidian text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       {/* Playground Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-surface-border bg-obsidian/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <Link
               href="/dashboard"
-              className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-surface transition flex items-center gap-1.5 text-xs font-mono"
+              className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-900 transition flex items-center gap-1.5 text-xs"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Về Dashboard</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Dashboard</span>
             </Link>
 
-            <div className="h-5 w-[1px] bg-surface-border" />
+            <div className="h-4 w-[1px] bg-zinc-800" />
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white">Model:</span>
+              <span className="text-xs text-zinc-400 font-medium">Model:</span>
               <select
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
-                className="bg-surface border border-surface-border text-white text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-accent-cyan font-mono"
+                className="bg-zinc-900 border border-zinc-800 text-zinc-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-zinc-600 font-mono"
               >
                 {AVAILABLE_MODELS.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -229,47 +224,47 @@ export default function Playground() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 font-mono text-xs">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-surface border border-surface-border">
-              <span className="text-slate-400">Số dư:</span>
-              <span className="text-accent-emerald font-bold">
+          <div className="flex items-center gap-2.5 font-mono text-xs">
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800">
+              <span className="text-zinc-500">Ví:</span>
+              <span className="text-zinc-200 font-semibold tabular-nums">
                 {formatVND(profile?.credit_balance || 0)}
               </span>
             </div>
 
             <button
               onClick={() => setMessages([])}
-              className="p-2 text-slate-500 hover:text-accent-rose rounded-lg hover:bg-surface transition"
+              className="p-1.5 text-zinc-400 hover:text-red-400 rounded-lg hover:bg-zinc-900 transition"
               title="Xóa lịch sử chat"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </header>
 
       {/* Chat Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col">
+      <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-between">
         {/* Messages List */}
-        <div className="flex-1 space-y-4 mb-4 overflow-y-auto">
+        <div className="space-y-4 mb-4 overflow-y-auto">
           {messages.map((m, idx) => (
             <div
               key={idx}
-              className={`flex gap-3 text-sm ${
+              className={`flex gap-2.5 text-sm ${
                 m.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
               {m.role === "assistant" && (
-                <div className="w-8 h-8 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center text-accent-cyan shrink-0 mt-0.5">
-                  <Bot className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 shrink-0 mt-0.5">
+                  <Bot className="w-3.5 h-3.5" />
                 </div>
               )}
 
               <div
-                className={`relative group max-w-[85%] rounded-2xl p-4 leading-relaxed ${
+                className={`relative group max-w-[85%] rounded-xl px-4 py-3 leading-relaxed ${
                   m.role === "user"
-                    ? "bg-gradient-to-r from-accent-cyan/20 to-accent-violet/20 border border-accent-cyan/30 text-white rounded-tr-none"
-                    : "bg-surface border border-surface-border text-slate-200 rounded-tl-none shadow-md"
+                    ? "bg-zinc-800 text-zinc-100 rounded-tr-sm"
+                    : "bg-zinc-900/80 border border-zinc-800/80 text-zinc-200 rounded-tl-sm shadow-sm"
                 }`}
               >
                 <div className="whitespace-pre-wrap text-xs sm:text-sm font-sans">{m.content}</div>
@@ -277,32 +272,32 @@ export default function Playground() {
                 {m.role === "assistant" && m.content && (
                   <button
                     onClick={() => copyMessage(m.content, idx)}
-                    className="absolute top-2 right-2 p-1.5 text-slate-500 hover:text-white rounded bg-surface/80 opacity-0 group-hover:opacity-100 transition"
+                    className="absolute top-2 right-2 p-1 text-zinc-500 hover:text-white rounded bg-zinc-900/80 opacity-0 group-hover:opacity-100 transition"
                   >
                     {copiedIndex === idx ? (
-                      <Check className="w-3.5 h-3.5 text-accent-emerald" />
+                      <Check className="w-3 h-3 text-emerald-400" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-3 h-3" />
                     )}
                   </button>
                 )}
               </div>
 
               {m.role === "user" && (
-                <div className="w-8 h-8 rounded-xl bg-surface border border-surface-border flex items-center justify-center text-slate-400 shrink-0 mt-0.5">
-                  <UserIcon className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shrink-0 mt-0.5">
+                  <UserIcon className="w-3.5 h-3.5" />
                 </div>
               )}
             </div>
           ))}
 
           {loading && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-8 h-8 rounded-xl bg-accent-cyan/10 border border-accent-cyan/20 flex items-center justify-center text-accent-cyan shrink-0">
-                <Loader2 className="w-4 h-4 animate-spin" />
+            <div className="flex gap-2.5 justify-start">
+              <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
               </div>
-              <div className="p-3 rounded-2xl bg-surface border border-surface-border text-xs text-slate-400 flex items-center gap-2 font-mono">
-                <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
+              <div className="px-3.5 py-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800/80 text-xs text-zinc-400 flex items-center gap-2 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>Đang stream dữ liệu từ {selectedModel}...</span>
               </div>
             </div>
@@ -313,9 +308,9 @@ export default function Playground() {
 
         {/* Telemetry pill */}
         {streamTelemetry && (
-          <div className="mb-3 px-3 py-1.5 rounded-xl bg-surface border border-surface-border text-[11px] font-mono text-slate-400 flex items-center justify-between">
+          <div className="mb-3 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <Zap className="w-3 h-3 text-accent-amber" />
+              <Zap className="w-3 h-3 text-zinc-400" />
               <span>Đã xuất ~{streamTelemetry.tokens} tokens</span>
             </span>
             <span>Thời gian: {(streamTelemetry.durationMs / 1000).toFixed(2)}s</span>
@@ -334,15 +329,15 @@ export default function Playground() {
                 handleSendMessage(e);
               }
             }}
-            placeholder="Nhập câu hỏi để test model (Nhấn Enter để gửi, Shift+Enter để xuống dòng)..."
-            className="w-full p-4 pr-14 rounded-2xl bg-surface border border-surface-border text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-accent-cyan transition resize-none shadow-xl shadow-black/50"
+            placeholder="Nhập câu hỏi để test model (Enter để gửi, Shift+Enter xuống dòng)..."
+            className="w-full p-3.5 pr-12 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-100 text-xs sm:text-sm placeholder:text-zinc-500 focus:outline-none focus:border-zinc-600 transition resize-none shadow-sm"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="absolute right-3.5 bottom-4 p-2.5 rounded-xl text-black bg-gradient-to-r from-accent-cyan to-accent-violet hover:opacity-95 transition disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute right-3 bottom-3.5 p-2 rounded-lg text-zinc-950 bg-white hover:bg-zinc-200 transition disabled:opacity-30 disabled:cursor-not-allowed active:scale-[0.98]"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : <Send className="w-4 h-4" />}
+            {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-950" /> : <Send className="w-3.5 h-3.5" />}
           </button>
         </form>
       </main>
